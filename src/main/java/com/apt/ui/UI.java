@@ -1,11 +1,16 @@
 package com.apt.ui;
 
 public class UI {
-    static int selectedIndex = 0;
+    private int selectedIndex = 0;
+    private String[] options;
 
-    public static int select(String[] options) {
+    public UI(String[] options) {
+        this.options = options;
+    }
+
+    public int select() {
         while (true) {
-            render(options, selectedIndex);
+            render();
             InputAction input = Input.get();
 
             switch (input) {
@@ -28,14 +33,14 @@ public class UI {
         }
     }
 
-    public static void render(String[] options, int selected) {
+    public void render() {
         Terminal.clearScreen();
         Terminal.moveCursorToHome();
 
-        System.out.print("Universiti Tekonologi MARA: Academic Performance Tracker\n\n\r");
+        System.out.print("\033[95mUniversiti Tekonologi MARA: Academic Performance Tracker\033[0m\n\n\r");
 
         for (int i = 0; i < options.length; i++) {
-            if (i == selected) {
+            if (i == selectedIndex) {
                 System.out.print("\033[36m> " + options[i] + "\033[0m\r\n");
             } else {
                 System.out.print("  " + options[i] + "\r\n");

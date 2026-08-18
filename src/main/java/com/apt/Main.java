@@ -8,6 +8,10 @@ import com.apt.io.CourseFileHandler;
 import com.apt.ui.*;
 
 public class Main {
+    static UI mainMenu = new UI(new String[] {"Manage Course", "Manage Students (TBA)"});
+    static UI studentMenu = new UI(new String[] {"Feature coming soon!"});
+    static UI coursesMenu;
+
     private static final int STATUS_BACK = -1;
     private static final int STATUS_QUIT = -2;
 
@@ -52,9 +56,8 @@ public class Main {
     }
 
     private static void mainMenu() {
-        String[] mainMenu = {"Manage Course", "Manage Students (TBA)"};
         while (true) {
-            int selection = UI.select(mainMenu);
+            int selection = mainMenu.select();
             if (selection == STATUS_BACK || selection == STATUS_QUIT) {
                 break;
             }
@@ -73,13 +76,14 @@ public class Main {
     }
 
     private static boolean courseMenu() {
-        String[] coursesMenu = new String[courses.size()];
+        String[] a = new String[courses.size()];
         for (int i = 0; i < courses.size(); i++) {
-            coursesMenu[i] = courses.get(i).getCode();
+            a[i] = courses.get(i).getCode();
         }
+        coursesMenu = new UI(a);
 
         while (true) {
-            int selection = UI.select(coursesMenu);
+            int selection = coursesMenu.select();
 
             if (selection == STATUS_BACK) return false;
             if (selection == STATUS_QUIT) return true;
@@ -96,9 +100,8 @@ public class Main {
     }
 
     private static boolean studentMenu() {
-        String[] studentMenu = {"Feature coming soon!"};
         while (true) {
-            int selection = UI.select(studentMenu);
+            int selection = studentMenu.select();
             if (selection == STATUS_BACK) return false;
             if (selection == STATUS_QUIT) return true;
         }
