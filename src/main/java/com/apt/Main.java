@@ -1,7 +1,106 @@
 package com.apt;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import com.apt.academic.Course;
+import com.apt.io.CourseFileHandler;
+import com.apt.ui.*;
+
 public class Main {
+    private static final int STATUS_BACK = -1;
+    private static final int STATUS_QUIT = -2;
+
+    public static CourseFileHandler courseFileHandler = new CourseFileHandler("data/courses.txt");
+    public static ArrayList<Course> courses = courseFileHandler.parseRecords();
+    public static Scanner keyboard = new Scanner(System.in);
+    private static String savePath = "/home/shah/Obsidian/UiTM-CDCS110/semester-3/academic_report.md";
+
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        /*
+            TODO: 1.0 Student login
+            TODO: 2.0 Track each course for each student
+            TODO: 3.0 Save user's default file path
+            TODO:   3.1 Save's user's default file path
+         */
+        if (args.length > 0) {
+            if (args[0].contains("-r")) {
+                System.out.print("Please enter absolute save path and file name and extension (Press enter to save to default save path): ");
+                String keyboardInput = keyboard.nextLine();
+                if (!keyboardInput.isEmpty()) {
+                    savePath = keyboardInput;
+                }
+                courseFileHandler.saveRecords(courses);
+                courseFileHandler.printReport(savePath, courses);
+                keyboard.close();
+                return;
+            }
+        }
+
+        Terminal.setRawMode();
+        Terminal.hideCursor();
+
+        try {
+            mainMenu();
+        } finally {
+            Terminal.showCursor();
+            Terminal.setCookedMode();
+            keyboard.close();
+            System.out.println("\nExiting system...\r");
+            //Terminal.moveCursorToHome();
+        }
+    }
+
+    private static void mainMenu() {
+        String[] mainMenu = {"Manage Course", "Manage Students (TBA)"};
+        while (true) {
+            int selection = UI.select(mainMenu);
+            if (selection == STATUS_BACK || selection == STATUS_QUIT) {
+                break;
+            }
+
+            switch (selection) {
+                case 0:
+                    if (courseMenu())
+                        return;
+                    break;
+                case 1:
+                    if (studentMenu())
+                        return;
+                    break;
+            }
+        }
+    }
+
+    private static boolean courseMenu() {
+        String[] coursesMenu = new String[courses.size()];
+        for (int i = 0; i < courses.size(); i++) {
+            coursesMenu[i] = courses.get(i).getCode();
+        }
+
+        while (true) {
+            int selection = UI.select(coursesMenu);
+
+            if (selection == STATUS_BACK) return false;
+            if (selection == STATUS_QUIT) return true;
+
+            InputAction input = InputAction.SELECT;
+            while (input != InputAction.BACK) {
+                Terminal.clearScreen();
+                Terminal.moveCursorToHome();
+                System.out.print(courses.get(selection).toTable());
+                input = Input.get();
+                if (input == InputAction.QUIT) return true;
+            }
+        }
+    }
+
+    private static boolean studentMenu() {
+        String[] studentMenu = {"Feature coming soon!"};
+        while (true) {
+            int selection = UI.select(studentMenu);
+            if (selection == STATUS_BACK) return false;
+            if (selection == STATUS_QUIT) return true;
+        }
     }
 }
