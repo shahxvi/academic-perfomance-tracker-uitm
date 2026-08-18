@@ -1,6 +1,6 @@
 # Academic Performance Tracker for UiTM
 
-A program created to track course performance in a Computer Science diploma program.
+A program created to track the performances of my courses for my computer science diploma program.
 
 ## Features
 
